@@ -1,0 +1,38 @@
+.head-text{
+    text-align: center;
+    padding-top: 6em;
+    text-transform: uppercase;
+}
+.qs-title{
+    width: 70%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 6em;
+}
+.home{
+    background-color: rgb(252, 246, 246);
+}
+.list{
+    margin: 0 auto;
+    margin-top: 4em;
+    width: 85%;
+}
+.list-head{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.list ol{
+    margin-top: 2em;
+}
+.list ol>li{
+    font-size: 1.5em;
+}
+.form-input{
+    width: 100%;
+    border-radius: 10px;
+
+}
+.list-option{
+    margin-top: 2em;
+}
