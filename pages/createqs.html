@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
+<body onload="load()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -41,13 +41,14 @@
 
     <div class="container-fluid">
         <div class="container">
+            <select class='form-control' id='q_select'></select>
             <div class="ques-list">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="ques-num">
-                            <h2>Question 1</h2>
+                            <h2>Question Add</h2>
                         </div>
-                        <input type="text" class="form-control" name="ques" id="ques1">
+                        <input type="text" class="form-control" name="ques" id="q">
                     </div>
                 </div>
                 <div class="row list-option">
@@ -57,7 +58,7 @@
                                 <label for="" class="form-control-label float-right">1.</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" class="form-control" name="option1" id="option1">
+                                <input type="text" class="form-control" name="option1" id="o1">
 
                             </div>
                         </div>
@@ -67,7 +68,7 @@
                                 <label for="" class="form-control-label float-right">2.</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" class="form-control" name="option2" id="option2">
+                                <input type="text" class="form-control" name="option2" id="o2">
 
                             </div>
                         </div>
@@ -77,7 +78,7 @@
                                 <label for="" class="form-control-label float-right">3.</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" class="form-control" name="option3" id="option3">
+                                <input type="text" class="form-control" name="option3" id="o3">
 
                             </div>
                         </div>
@@ -87,10 +88,20 @@
                                 <label for="" class="form-control-label float-right">4.</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" class="form-control" name="option4" id="option4">
+                                <input type="text" class="form-control" name="option4" id="o4">
 
                             </div>
                         </div>
+                        <div class="row">
+                                <div class="col-1">
+                                    <label for="" class="form-control-label float-right">Correct Answer</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="number" min="1" max="4" placeholder="1-4" class="form-control"  id="a">
+    
+                                </div>
+                            </div>
+                            <button onclick="add_q()" >Add</button>
 
                     </div>
                 </div>
@@ -110,5 +121,46 @@
     integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
 <script src="../js/app.js"></script>
+<script>
+    function load(){
+    let quiz = firebase.database().ref('quiz');
+    quiz.on('value',function(data){
+        let quiz_s = data.val();
+        let str = '';
+        for(q in quiz_s){
+            str += `<option value='${q}'>${q}</option>`
+        }
+
+
+        document.getElementById('q_select').innerHTML = str;
+
+    })
+    }
+    function add_q(){
+        let q = document.getElementById('q').value;
+        let o1 = document.getElementById('o1').value;
+        let o2 = document.getElementById('o2').value;
+        let o3 = document.getElementById('o3').value;
+        let o4 = document.getElementById('o4').value;
+        let a = document.getElementById('a').value;
+        let quiz =  document.getElementById('q_select').value;
+
+     firebase.database().ref('quiz/'+quiz)
+    .once('value',function(data){
+        let old = data.val();
+        let old_array = old.ques;
+        old_array.push({"q":q,"options":[o1,o2,o3,o4],"a":a});
+        firebase.database().ref('quiz/'+quiz).set({
+           ques : old_array ,
+           title : old.title,
+           detail : old.detail
+        }).then(()=>{
+            alert("question added, add more questions");
+            console.log("question added");
+        })
+//console.log(data.val(),quiz)
+    })
+}
+</script>
 
 </html>
